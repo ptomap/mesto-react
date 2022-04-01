@@ -2,37 +2,16 @@ import React from "react";
 
 import Header from "./Header";
 import Main from "./Main";
-import api from "../utils/api";
 import Footer from "./Footer";
 import ImagePopup from "./ImagePopup";
 import PopupWithForm from "./PopupWithForm";
 
-
-export const CurrentUserContext = React.createContext();
 
 function App() {
   const [isEditProfilePopupOpen, setisEditProfilePopupOpen] = React.useState(false);
   const [isEditAvatarPopupOpen, setisEditAvatarPopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setisAddPlacePopupOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({});
-  const [currentUser, setCurrentUser] = React.useState({
-    name: "",
-    about: "",
-    avatar: "",
-    _id: "",
-    cohort: "",
-  });
-
-  React.useEffect(() => {
-    api
-      .getUserInfo()
-      .then((data) => {
-        setCurrentUser(data);
-      })
-      .catch((err) => {
-        console.log(`Ошибка: ${err}`);
-      });
-  }, []);
 
   const handleEditAvatarClick = () => {
     setisEditAvatarPopupOpen(!isEditAvatarPopupOpen);
@@ -58,7 +37,6 @@ function App() {
   };
 
   return (
-    <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <Header />
         <Main
@@ -74,6 +52,7 @@ function App() {
           title="Обновить аватар"
           isOpen={isEditAvatarPopupOpen}
           onClose={closeAllPopups}
+          buttonText="Сохранить"
         >
           <fieldset className="form__set">
             <input
@@ -85,9 +64,6 @@ function App() {
               required
             />
             <span id="avatar-error" className="form__input-error"></span>
-            <button type="submit" className="form__submit">
-              Сохранить
-            </button>
           </fieldset>
         </PopupWithForm>
 
@@ -96,6 +72,7 @@ function App() {
           title="Редактировать профиль"
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}
+          buttonText="Сохранить"
         >
           <fieldset className="form__set">
             <input
@@ -120,9 +97,6 @@ function App() {
               required
             />
             <span id="jobName-error" className="form__input-error"></span>
-            <button type="submit" className="form__submit">
-              Сохранить
-            </button>
           </fieldset>
         </PopupWithForm>
 
@@ -131,6 +105,7 @@ function App() {
           title="Новое место"
           isOpen={isAddPlacePopupOpen}
           onClose={closeAllPopups}
+          buttonText="Создать"
         >
           <fieldset className="form__set">
             <input
@@ -153,31 +128,21 @@ function App() {
               required
             />
             <span id="link-error" className="form__input-error"></span>
-            <button type="submit" className="form__submit">
-              Создать
-            </button>
           </fieldset>
         </PopupWithForm>
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />
 
-        <div className="popup popup_type_delete-card">
-          <div className="popup__container">
-            <button type="button" className="popup__close"></button>
-            <h3 className="popup__title">Вы уверены?</h3>
-            <form
-              name="remove-form"
-              action="#"
-              className="form popup__form"
-              noValidate
-            >
-              <button type="submit" className="form__submit">
-                Да
-              </button>
-            </form>
-          </div>
-        </div>
+        <PopupWithForm
+          name="remove-form"
+          title="Вы уверены?"
+          isOpen={isAddPlacePopupOpen}
+          onClose={closeAllPopups}
+          buttonText="Да"
+        >
+        </PopupWithForm>
+
+
       </div>
-    </CurrentUserContext.Provider>
   );
 }
 
