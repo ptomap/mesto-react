@@ -1,9 +1,14 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import PopupWithForm from './PopupWithForm';
 
 const AddPlacePopup = ({ isOpen, onClose, onAddPlace }) => {
   const [image, setImage] = useState('');
   const [description, setDescription] = useState('');
+
+  React.useEffect(() => {
+    setDescription('');
+    setImage('');
+  }, [isOpen]);
 
   const handleImageChange = (event) => {
     setImage(event.target.value);
@@ -40,6 +45,7 @@ const AddPlacePopup = ({ isOpen, onClose, onAddPlace }) => {
           minLength="2"
           maxLength="30"
           className="form__input"
+          value={description}
           onChange={handleDescriptionChange}
           required
         />
@@ -50,6 +56,7 @@ const AddPlacePopup = ({ isOpen, onClose, onAddPlace }) => {
           id="link"
           placeholder="Ссылка на картинку"
           className="form__input"
+          value={image}
           onChange={handleImageChange}
           required
         />
